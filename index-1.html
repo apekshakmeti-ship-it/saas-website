@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledgerline – Get paid on time, without chasing</title>
+<meta name="description" content="Ledgerline sends invoices, reminds clients and reconciles payments automatically for small businesses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F1F3D;        /* deep navy: text, footer */
+    --paper:#F6F8FB;      /* cool off-white background */
+    --blue:#2B4BDB;       /* primary action */
+    --mint:#12A594;       /* "paid" / success */
+    --amber:#E8A317;      /* small highlights */
+    --line:#DDE3EE;
+    --muted:#55627D;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:17px}
+  h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;letter-spacing:-.02em}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  :focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:6px}
+
+  /* Buttons */
+  .btn{display:inline-block;padding:13px 22px;border-radius:10px;font-weight:600;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-size:1rem;font-family:inherit}
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-primary:hover{background:#1f3bb8}
+  .btn-ghost{border-color:var(--ink);color:var(--ink);background:transparent}
+  .btn-ghost:hover{background:var(--ink);color:#fff}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:20;background:rgba(246,248,251,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.35rem;text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo i{width:22px;height:22px;border-radius:6px;background:var(--blue);display:inline-block;position:relative}
+  .logo i::after{content:"";position:absolute;left:5px;right:5px;bottom:6px;height:3px;background:#fff;border-radius:2px}
+  nav ul{display:flex;gap:28px;list-style:none;align-items:center}
+  nav a{text-decoration:none;font-weight:500;color:var(--muted)}
+  nav a:hover{color:var(--ink)}
+  .menu-btn{display:none;background:none;border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;font:inherit;font-weight:600;color:var(--ink)}
+
+  /* Hero */
+  .hero{padding:84px 0 72px}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(2.4rem,5.4vw,4rem);font-weight:700}
+  .hero p.lead{margin:22px 0 32px;font-size:1.15rem;color:var(--muted);max-width:34em}
+  .hero .actions{display:flex;gap:12px;flex-wrap:wrap}
+  .hero small{display:block;margin-top:16px;color:var(--muted);font-size:.92rem}
+
+  /* Invoice demo (the one memorable element) */
+  .invoice{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 24px 60px -28px rgba(15,31,61,.35)}
+  .inv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .inv-top b{font-family:"Bricolage Grotesque",sans-serif;font-size:1.1rem}
+  .inv-top span{display:block;color:var(--muted);font-size:.9rem}
+  .inv-amount{font-family:"Bricolage Grotesque",sans-serif;font-size:2rem;font-weight:700}
+  .badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.85rem;font-weight:600;background:#FFF3D6;color:#8A5B00;animation:badge 0s 3.6s forwards}
+  @keyframes badge{to{background:#D9F4EF;color:#0B6B5F}}
+  .steps{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;list-style:none;display:grid;gap:14px}
+  .steps li{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:.97rem}
+  .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;animation:dot .4s forwards}
+  .steps li:nth-child(1) .dot{animation-delay:.6s}
+  .steps li:nth-child(2) .dot{animation-delay:1.6s}
+  .steps li:nth-child(3) .dot{animation-delay:2.6s}
+  .steps li:nth-child(4) .dot{animation-delay:3.6s}
+  @keyframes dot{to{background:var(--mint);border-color:var(--mint);box-shadow:inset 0 0 0 4px #fff}}
+  .steps li:nth-child(4) .dot{animation-name:dotpaid}
+  @keyframes dotpaid{to{background:var(--mint);border-color:var(--mint);box-shadow:inset 0 0 0 4px #fff}}
+
+  /* Sections */
+  section{padding:80px 0}
+  .section-head{max-width:640px;margin-bottom:44px}
+  .section-head h2{font-size:clamp(1.9rem,3.6vw,2.7rem)}
+  .section-head p{color:var(--muted);margin-top:14px}
+
+  /* Features: a ruled list, not a card grid */
+  .features{border-top:1.5px solid var(--ink)}
+  .feature{display:grid;grid-template-columns:.9fr 1.4fr;gap:32px;padding:30px 0;border-bottom:1px solid var(--line)}
+  .feature h3{font-size:1.45rem}
+  .feature p{color:var(--muted);max-width:38em}
+
+  /* How it works: a genuine sequence */
+  .how{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .how ol{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:36px;counter-reset:s}
+  .how li{counter-increment:s}
+  .how li::before{content:counter(s);display:flex;width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;align-items:center;justify-content:center;font-weight:600;margin-bottom:16px}
+  .how h3{font-size:1.3rem;margin-bottom:8px}
+  .how p{color:var(--muted)}
+
+  /* Pricing */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;display:flex;flex-direction:column}
+  .plan.featured{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .plan h3{font-size:1.3rem}
+  .price{font-family:"Bricolage Grotesque",sans-serif;font-size:2.6rem;font-weight:700;margin:14px 0 4px}
+  .price small{font-size:1rem;font-weight:400;opacity:.7}
+  .plan ul{list-style:none;margin:20px 0 28px;display:grid;gap:10px;flex:1}
+  .plan li{padding-left:26px;position:relative}
+  .plan li::before{content:"";position:absolute;left:2px;top:.5em;width:12px;height:6px;border-left:2px solid var(--mint);border-bottom:2px solid var(--mint);transform:rotate(-45deg)}
+  .plan.featured .btn-primary{background:#fff;color:var(--ink)}
+  .plan .tag{color:var(--amber);font-weight:600;font-size:.9rem}
+
+  /* Testimonial */
+  .quote{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:40px;max-width:820px}
+  .quote p{font-family:"Bricolage Grotesque",sans-serif;font-size:1.6rem;line-height:1.35}
+  .quote footer{margin-top:20px;color:var(--muted);border:0;background:none;position:static}
+
+  /* FAQ */
+  details{border-bottom:1px solid var(--line);padding:20px 0;max-width:780px}
+  summary{cursor:pointer;font-weight:600;font-size:1.1rem;list-style:none;display:flex;justify-content:space-between;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--blue)}
+  details[open] summary::after{content:"–"}
+  details p{color:var(--muted);margin-top:12px}
+
+  /* CTA + footer */
+  .cta{background:var(--blue);color:#fff;text-align:left}
+  .cta .wrap{display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap}
+  .cta h2{font-size:clamp(1.8rem,3.4vw,2.5rem);max-width:15em}
+  .cta .btn{background:#fff;color:var(--ink)}
+  footer.site{background:var(--ink);color:#B9C3DA;padding:48px 0 32px;font-size:.95rem;position:static}
+  .foot{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap}
+  .foot ul{list-style:none;display:grid;gap:8px}
+  .foot b{color:#fff;display:block;margin-bottom:10px}
+  .foot a{text-decoration:none}.foot a:hover{color:#fff}
+  .copy{margin-top:36px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);font-size:.88rem}
+
+  /* Mobile */
+  @media (max-width:860px){
+    body{font-size:16px}
+    .hero{padding:52px 0 48px}
+    .hero-grid,.feature,.how ol,.plans{grid-template-columns:1fr}
+    .hero-grid{gap:40px}
+    section{padding:56px 0}
+    .feature{gap:8px}
+    .menu-btn{display:block}
+    nav ul{display:none;position:absolute;top:68px;left:0;right:0;background:var(--paper);flex-direction:column;align-items:flex-start;padding:20px 22px 26px;gap:18px;border-bottom:1px solid var(--line)}
+    nav ul.open{display:flex}
+    .quote{padding:26px}.quote p{font-size:1.25rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .dot,.badge{animation-duration:0s!important;animation-delay:0s!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top"><i></i>Ledgerline</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav aria-label="Main">
+      <ul id="menu">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a class="btn btn-primary" href="#start" style="color:#fff">Start free trial</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Send the invoice. Ledgerline handles the waiting.</h1>
+        <p class="lead">Ledgerline sends invoices, reminds clients at the right time and matches payments to your bank account, so you stop chasing and start planning.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#start">Start free trial</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <small>14 days free. No credit card needed.</small>
+      </div>
+
+      <div class="invoice" aria-label="Example invoice being paid">
+        <div class="inv-top">
+          <div><b>Invoice #1042</b><span>Northwind Studio</span></div>
+          <div style="text-align:right"><div class="inv-amount">₹48,500</div><span class="badge" id="badge" aria-live="polite"></span></div>
+        </div>
+        <ul class="steps">
+          <li><span class="dot"></span>Invoice sent to client</li>
+          <li><span class="dot"></span>Client opened the invoice</li>
+          <li><span class="dot"></span>Reminder sent automatically</li>
+          <li><span class="dot"></span>Payment received and matched</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Everything between "sent" and "paid"</h2>
+        <p>The follow-up work that eats your week, done for you.</p>
+      </div>
+      <div class="features">
+        <div class="feature"><h3>Invoices in under a minute</h3><p>Pick a client, add line items and send. Your logo, taxes and payment link are already filled in.</p></div>
+        <div class="feature"><h3>Reminders that sound like you</h3><p>Set the schedule once. Ledgerline sends polite nudges before and after the due date, and stops the moment a client pays.</p></div>
+        <div class="feature"><h3>Payments matched automatically</h3><p>Connect your bank and each payment is linked to the right invoice, with no spreadsheets to reconcile.</p></div>
+        <div class="feature"><h3>Clear cash-flow reports</h3><p>See what is overdue, what is coming in this month and which clients pay late.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="section-head"><h2>Set up in an afternoon</h2></div>
+      <ol>
+        <li><h3>Connect your account</h3><p>Sign up, add your business details and link your bank.</p></li>
+        <li><h3>Send your first invoice</h3><p>Import existing clients or add them as you go.</p></li>
+        <li><h3>Get paid</h3><p>Reminders and reconciliation run in the background.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head"><h2>Simple pricing</h2><p>Pay monthly. Cancel any time.</p></div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Starter</h3>
+          <div class="price">₹0<small> / month</small></div>
+          <p>For freelancers getting going.</p>
+          <ul><li>5 invoices a month</li><li>Email reminders</li><li>Payment links</li></ul>
+          <a class="btn btn-ghost" href="#start">Get started</a>
+        </div>
+        <div class="plan featured">
+          <span class="tag">Most popular</span>
+          <h3>Growth</h3>
+          <div class="price">₹799<small> / month</small></div>
+          <p>For small businesses with regular clients.</p>
+          <ul><li>Unlimited invoices</li><li>Automatic bank matching</li><li>Custom reminder schedule</li><li>Cash-flow reports</li></ul>
+          <a class="btn btn-primary" href="#start">Start free trial</a>
+        </div>
+        <div class="plan">
+          <h3>Team</h3>
+          <div class="price">₹2,499<small> / month</small></div>
+          <p>For teams that share billing.</p>
+          <ul><li>Everything in Growth</li><li>Up to 10 team members</li><li>Roles and approvals</li><li>Priority support</li></ul>
+          <a class="btn btn-ghost" href="#start">Talk to us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head"><h2>Questions, answered</h2></div>
+      <details><summary>Is my financial data safe?</summary><p>Data is encrypted in transit and at rest, and we only request read access to your bank.</p></details>
+      <details><summary>Can I import my existing clients?</summary><p>Yes. Upload a CSV or add clients one by one.</p></details>
+      <details><summary>Do my clients need an account?</summary><p>No. They receive a link and can pay without signing up.</p></details>
+      <details><summary>Can I cancel any time?</summary><p>Yes. There are no contracts, and you can export all your data when you leave.</p></details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="start">
+    <div class="wrap">
+      <h2>Send your first invoice today.</h2>
+      <a class="btn" href="mailto:hello@ledgerline.example">Start free trial</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot">
+      <div><a class="logo" href="#top" style="color:#fff"><i></i>Ledgerline</a><p style="margin-top:12px;max-width:22em">Invoicing that follows up for you.</p></div>
+      <div><b>Product</b><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><b>Company</b><ul><li><a href="#">About</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li></ul></div>
+    </div>
+    <div class="copy">© 2026 Ledgerline. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const btn = document.getElementById('menuBtn'), menu = document.getElementById('menu');
+  btn.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  });
+  menu.addEventListener('click', e => { if (e.target.tagName === 'A') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', false); } });
+
+  // Invoice badge: flips from "Awaiting payment" to "Paid" at the end of the sequence
+  const badge = document.getElementById('badge');
+  badge.textContent = 'Awaiting payment';
+  setTimeout(() => badge.textContent = 'Paid', 3600);
+</script>
+</body>
+</html>
